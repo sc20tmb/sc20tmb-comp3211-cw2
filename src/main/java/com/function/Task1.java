@@ -224,11 +224,6 @@ public class Task1 {
             context.getLogger().log(Level.SEVERE, e.getMessage());
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Encountered an SQL error during the database connection.").build();
         }
-        /*catch (InterruptedException e)
-        {
-            context.getLogger().log(Level.SEVERE, e.getMessage());
-            return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Encountered an unexpected error.").build();
-        }*/
 
         return request.createResponseBuilder(HttpStatus.OK).body("Successfully Generated and Stored Sensor Data :)").build();
 
