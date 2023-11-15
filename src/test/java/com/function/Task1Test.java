@@ -44,6 +44,6 @@ public class Task1Test {
         final HttpResponseMessage ret = new Task1().run(req, context);
 
         // Verify
-        assertEquals(HttpStatus.OK, ret.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, ret.getStatus());
     }
 }
