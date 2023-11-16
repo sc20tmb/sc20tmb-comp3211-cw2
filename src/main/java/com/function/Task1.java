@@ -106,6 +106,8 @@ public class Task1 {
             final ExecutionContext context) {
         context.getLogger().info("Task 1 HTTP trigger processed a request.");
 
+        long executionStartTime = System.currentTimeMillis();
+
         // Check a request body is present
         if (!request.getBody().isPresent())
         {
@@ -137,7 +139,7 @@ public class Task1 {
             }
             else
             {
-                return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass whether you would like to simulate realistic readings in thte request body").build();
+                return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass whether you would like to simulate realistic readings in the request body").build();
             }
         }
         catch (Exception e)
@@ -199,7 +201,7 @@ public class Task1 {
                     query.setString(5, String.valueOf(currentSensor.getCO2()));
                     query.setTimestamp(6, Timestamp.valueOf(currentSensor.getTimestamp()));
                     
-                    query.executeUpdate();
+                    query.addBatch();
                 }
                 // Pause for 2 seconds to simulate staggered readings
                 if (simulateDelayedReadings)
@@ -215,6 +217,8 @@ public class Task1 {
                     }
                     
                 }
+                query.executeBatch();
+                query.clearBatch();
             }  
             connection.close();
             query.close();
@@ -225,7 +229,8 @@ public class Task1 {
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Encountered an SQL error during the database connection.").build();
         }
 
-        return request.createResponseBuilder(HttpStatus.OK).body("Successfully Generated and Stored Sensor Data :)").build();
+        long executionTotalTime = System.currentTimeMillis() - executionStartTime;
+        return request.createResponseBuilder(HttpStatus.OK).body("Successfully Generated and Stored Sensor Data. The total execution time was: " + executionTotalTime).build();
 
     }
 }
