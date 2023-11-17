@@ -9,8 +9,6 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -141,6 +139,8 @@ public class Task1 {
             query = connection.prepareStatement("INSERT INTO sensorData VALUES (?, ?, ?, ?, ?, ?)");
             for (int iteration = 0; iteration < numIterations; iteration++)
             {
+                // Seed the randomness to ensure variation
+                seed.setSeed(System.currentTimeMillis());
                 // For each set of readings, generate 20 random readings
                 // Insert each reading as a new row in the database
                 for (int id = 1; id <= 20; id++)
