@@ -9,8 +9,6 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,50 +23,6 @@ import java.sql.*;
  * Azure Functions with HTTP Trigger.
  */
 public class Task1 {
-    public static class SensorData
-    {
-        private int id;
-        private int temperature;
-        private int wind;
-        private int rHumidity;
-        private int co2;
-        private LocalDateTime timestamp;
-
-        public SensorData(int sensorId, int sensorTemperature, int sensorWind, int sensorRHumidity, int sensorCo2)
-        {
-            this.id = sensorId;
-            this.temperature = sensorTemperature;
-            this.wind = sensorWind;
-            this.rHumidity = sensorRHumidity;
-            this.co2 = sensorCo2;
-            this.timestamp = LocalDateTime.now();
-        }
-
-        public int getId()
-        {
-            return this.id;
-        }
-        public int getTemperature()
-        {
-            return this.temperature;
-        }
-        public int getWind()
-        {
-            return this.wind;
-        }
-        public int getRHumidity()
-        {
-            return this.rHumidity;
-        }
-        public int getCO2()
-        {
-            return this.co2;
-        }
-        public LocalDateTime getTimestamp()
-        {
-            return this.timestamp;
-        }
-    }
 
     protected static int GenerateRandomValue(Random seed, int start, int end)
     {
@@ -185,6 +139,8 @@ public class Task1 {
             query = connection.prepareStatement("INSERT INTO sensorData VALUES (?, ?, ?, ?, ?, ?)");
             for (int iteration = 0; iteration < numIterations; iteration++)
             {
+                // Seed the randomness to ensure variation
+                seed.setSeed(System.currentTimeMillis());
                 // For each set of readings, generate 20 random readings
                 // Insert each reading as a new row in the database
                 for (int id = 1; id <= 20; id++)
