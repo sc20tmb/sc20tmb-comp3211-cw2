@@ -35,7 +35,9 @@ public class Task1 {
         {
             // Drop the table if it already exists
             PreparedStatement query = connection.prepareStatement("IF OBJECT_ID('sensorData', 'U') IS NOT NULL DROP TABLE sensorData;" + //
-                                                                  "CREATE TABLE sensorData (id int NOT NULL, temperature int NOT NULL, wind int NOT NULL, rHumidity int NOT NULL, co2 int NOT NULL, timestamp datetime NOT NULL)");
+                                                                  "CREATE TABLE sensorData (id int NOT NULL, temperature int NOT NULL, wind int NOT NULL, rHumidity int NOT NULL, co2 int NOT NULL, timestamp varchar(40) NOT NULL);" + //
+                                                                  "ALTER TABLE sensorData ADD CONSTRAINT pkIdTimestamp PRIMARY KEY (id, timestamp);" + //
+                                                                  "ALTER TABLE sensorData ENABLE CHANGE_TRACKING;");
             query.executeUpdate();
             return true;
         }
@@ -155,7 +157,7 @@ public class Task1 {
                     query.setString(3, String.valueOf(currentSensor.getWind()));
                     query.setString(4, String.valueOf(currentSensor.getRHumidity()));
                     query.setString(5, String.valueOf(currentSensor.getCO2()));
-                    query.setTimestamp(6, Timestamp.valueOf(currentSensor.getTimestamp()));
+                    query.setString(6, String.valueOf(currentSensor.getTimestamp()));
                     
                     query.addBatch();
                 }

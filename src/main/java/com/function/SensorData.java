@@ -8,7 +8,7 @@ public class SensorData {
     private int wind;
     private int rHumidity;
     private int co2;
-    private LocalDateTime timestamp;
+    public String timestamp;
 
     public SensorData()
     {
@@ -17,7 +17,7 @@ public class SensorData {
         this.wind = 0;
         this.rHumidity = 0;
         this.co2 = 0;
-        this.timestamp = LocalDateTime.MIN;
+        this.timestamp = LocalDateTime.MIN.toString();
     }
 
     public SensorData(int sensorId, int sensorTemperature, int sensorWind, int sensorRHumidity, int sensorCo2)
@@ -27,7 +27,7 @@ public class SensorData {
         this.wind = sensorWind;
         this.rHumidity = sensorRHumidity;
         this.co2 = sensorCo2;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
     }
 
     public int getId()
@@ -50,7 +50,7 @@ public class SensorData {
     {
         return this.co2;
     }
-    public LocalDateTime getTimestamp()
+    public String getTimestamp()
     {
         return this.timestamp;
     }
@@ -75,7 +75,7 @@ public class SensorData {
     {
         this.co2 = co2;
     }
-    public void setTimestamp(LocalDateTime timestamp)
+    public void setTimestamp(String timestamp)
     {
         this.timestamp = timestamp;
     }

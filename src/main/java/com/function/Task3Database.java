@@ -58,7 +58,7 @@ public class Task3Database {
                 query.setString(3, String.valueOf(sensor.getWind()));
                 query.setString(4, String.valueOf(sensor.getRHumidity()));
                 query.setString(5, String.valueOf(sensor.getCO2()));
-                query.setTimestamp(6, Timestamp.valueOf(sensor.getTimestamp()));
+                query.setString(6, String.valueOf(sensor.getTimestamp()));
 
                 query.addBatch();
             }
