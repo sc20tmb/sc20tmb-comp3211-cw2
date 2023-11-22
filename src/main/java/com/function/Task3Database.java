@@ -26,6 +26,8 @@ public class Task3Database {
 
         final String body = request.getBody().get();
         ObjectMapper mapper = new ObjectMapper();
+        // Jackson cannot deserialise Java Time types by default (timestamp)
+        // Add extra module to be able to do so
         mapper.registerModule(new JavaTimeModule());
         ArrayList<SensorData> sensorData;
 
@@ -52,6 +54,7 @@ public class Task3Database {
             // Assume table already created
             query = connection.prepareStatement("INSERT INTO sensorData VALUES (?, ?, ?, ?, ?, ?)");
 
+            // Write each sensor sent over the network into the database
             for (SensorData sensor : sensorData) {
                 query.setString(1, String.valueOf(sensor.getId()));
                 query.setString(2, String.valueOf(sensor.getTemperature()));

@@ -25,12 +25,13 @@ public class Task3Results {
      */
     @FunctionName("Task3Results")
     public HttpResponseMessage run(
-            @HttpTrigger(name = "req", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
+            @HttpTrigger(name = "req", methods = {HttpMethod.GET}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
-        context.getLogger().info("Java HTTP trigger processed a request.");
+        context.getLogger().info("Task3Results HTTP trigger processed a request.");
 
         try
         {
+            // Retrieve table from DB
             Connection connection = DriverManager.getConnection(System.getenv("DB_CONNECTION_STRING"));
 
             PreparedStatement query = connection.prepareStatement("SELECT * FROM sensorDataStatistics;");
@@ -43,7 +44,7 @@ public class Task3Results {
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             List<Map<String, Object>> resultList = new ArrayList<>();
 
-            // Construct JSON response
+            // Construct JSON response and return to the client
             while (results.next())
             {
                 Map<String, Object> row = new HashMap<>();
