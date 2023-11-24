@@ -24,6 +24,7 @@ import java.sql.*;
  */
 public class Task1 {
 
+    // Generates a random value between start and end
     protected static int GenerateRandomValue(Random seed, int start, int end)
     {
         return seed.nextInt(start, end+1);
@@ -34,6 +35,7 @@ public class Task1 {
         try
         {
             // Drop the table if it already exists
+            // Recreate primary keys and enable change tracking for the sql trigger
             PreparedStatement query = connection.prepareStatement("IF OBJECT_ID('sensorData', 'U') IS NOT NULL DROP TABLE sensorData;" + //
                                                                   "CREATE TABLE sensorData (id int NOT NULL, temperature int NOT NULL, wind int NOT NULL, rHumidity int NOT NULL, co2 int NOT NULL, timestamp varchar(40) NOT NULL);" + //
                                                                   "ALTER TABLE sensorData ADD CONSTRAINT pkIdTimestamp PRIMARY KEY (id, timestamp);" + //
@@ -62,9 +64,10 @@ public class Task1 {
             final ExecutionContext context) {
         context.getLogger().info("Task 1 HTTP trigger processed a request.");
 
+        // Start execution timer
         long executionStartTime = System.currentTimeMillis();
 
-        // Check a request body is present
+        // Check a request body is present in the first place
         if (!request.getBody().isPresent())
         {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass a number of sensors in the request body").build();
@@ -76,7 +79,7 @@ public class Task1 {
         final String numIterationsString;
         final String simulateDelayedReadingsString;
 
-        // Check the numSensors parameter exists
+        // Check the required parameters exist
         try
         {
             JsonNode node = mapper.readTree(body);
@@ -187,6 +190,7 @@ public class Task1 {
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Encountered an SQL error during the database connection.").build();
         }
 
+        // Calculate execution time and return to the client
         long executionTotalTime = System.currentTimeMillis() - executionStartTime;
         return request.createResponseBuilder(HttpStatus.OK).body("Successfully Generated and Stored Sensor Data. The total execution time was: " + executionTotalTime).build();
 

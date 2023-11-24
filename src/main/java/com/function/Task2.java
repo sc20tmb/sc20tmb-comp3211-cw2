@@ -35,6 +35,7 @@ public class Task2 {
 
             // ASSUME TABLE ALREADY CREATED
 
+            // Get min, max and average of each field for each sensor
             query = connection.prepareStatement("SELECT id, MIN(temperature) AS minTemperature, MAX(temperature) AS maxTemperature, AVG(temperature) AS avgTemperature, " + //
                                                             "MIN(wind) AS minWind, MAX(wind) AS maxWind, AVG(wind) AS avgWind," + //
                                                             "MIN(rHumidity) AS minRHumidity, MAX(rHumidity) AS maxrHumidity, AVG(rHumidity) AS avgRHumidity," + //

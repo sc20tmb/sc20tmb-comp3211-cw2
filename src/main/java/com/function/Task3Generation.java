@@ -31,10 +31,11 @@ public class Task3Generation {
         final ExecutionContext context
     ) {
         
-        // Initialising variables
         ArrayList<SensorData> data = new ArrayList<>();
         Random seed = new Random();
         ObjectMapper mapper = new ObjectMapper();
+        // Jackson cannot serialise Java Time types by default (timestamp)
+        // Add extra module to be able to do so
         mapper.registerModule(new JavaTimeModule());
         String body;
 
@@ -60,7 +61,7 @@ public class Task3Generation {
             return; // Do not attempt to send data
         }
 
-        // Send data to Database function
+        // Send data to Database function through HTTP
         try
         {
             URL url = new URL("https://comp3211-sc20tmb-cw1.azurewebsites.net/api/Task3Database");
@@ -73,6 +74,7 @@ public class Task3Generation {
             OutputStream out = connection.getOutputStream();
             out.write(body.getBytes());
 
+            // Check response code
             switch(connection.getResponseCode())
             {
                 case 200: // OK

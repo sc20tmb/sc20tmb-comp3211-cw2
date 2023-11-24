@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
-// This code is utilised from the Microsoft Learn Tutorial for the
+// This trigger code is utilised from the Microsoft Learn Tutorial for the
 // Azure SQL Trigger for Functions
 // Available: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-azure-sql-trigger?tabs=isolated-process%2Cportal&pivots=programming-language-java
 public class Task3Statistics {
@@ -42,6 +42,7 @@ public class Task3Statistics {
             @SQLTrigger(
                 name = "sensorDataItems",
                 tableName = "[dbo].[sensorData]",
+                // SQL Trigger doesn't support JDBC so use ADO.NET connection string
                 connectionStringSetting = "DB_CONNECTION_STRING_TRIGGER")
                 SqlChangeSensorData[] sensorDataItems,
             ExecutionContext context) {
@@ -54,10 +55,12 @@ public class Task3Statistics {
 
                 try 
                 {
+                    // Refresh statistics table
                     connection = DriverManager.getConnection(connectionString);
 
                     CreateStatisticsTable(connection, context);
 
+                    // Retrieves the min, max and average of each field for each sensor
                     query = connection.prepareStatement("SELECT id, MIN(temperature) AS minTemperature, MAX(temperature) AS maxTemperature, AVG(temperature) AS avgTemperature, " + //
                                                                     "MIN(wind) AS minWind, MAX(wind) AS maxWind, AVG(wind) AS avgWind," + //
                                                                     "MIN(rHumidity) AS minRHumidity, MAX(rHumidity) AS maxRHumidity, AVG(rHumidity) AS avgRHumidity," + //
@@ -67,11 +70,11 @@ public class Task3Statistics {
                     query.executeQuery();
 
                     ResultSet queryResults = query.getResultSet();
-                    // Process the result set
-
+                    
+                    // Write the data to the sensorDataStatistics table
                     insert = connection.prepareStatement("INSERT INTO sensorDataStatistics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-                    // Iterate through the query result and add each row to the JSON object
+                    // Iterate through the query result and add each row to the insert query
                     while (queryResults.next())
                     {
                         insert.setInt(1, Integer.parseInt(queryResults.getObject("id").toString()));
